@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>明天吃什么 · 美食探险签筒</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5e8d0 0%, #f0d9b5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #5a3921;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 253, 248, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(90, 57, 33, 0.2);
+            overflow: hidden;
+            border: 8px solid #e6d2b5;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #8b4513, #a0522d);
+            color: #ffebcd;
+            text-align: center;
+            padding: 25px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .header::before {
+            content: "🍜🥢🍚🍗🥦🌶️";
+            font-size: 2rem;
+            position: absolute;
+            top: 10px;
+            left: 0;
+            width: 100%;
+            opacity: 0.3;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .bamboo-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f3e9;
+            border-radius: 15px;
+            border: 3px dashed #d4a574;
+        }
+        
+        .bamboo-tube {
+            display: inline-block;
+            background: linear-gradient(to right, #8a9a5b, #6b8e23);
+            width: 120px;
+            height: 200px;
+            border-radius: 10px 10px 60px 60px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .bamboo-tube:hover {
+            transform: translateY(-5px);
+        }
+        
+        .bamboo-tube.shaking {
+            animation: shake 0.5s ease-in-out 3;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .bamboo-tube::before {
+            content: "🎋";
+            font-size: 3rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .draw-button {
+            background: linear-gradient(to bottom, #d4a574, #b08d5a);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(180, 140, 90, 0.4);
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .draw-button:hover {
+            background: linear-gradient(to bottom, #b08d5a, #8b6d46);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(180, 140, 90, 0.6);
+        }
+        
+        .result-container {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 8px 20px rgba(90, 57, 33, 0.1);
+            border-left: 6px solid #d4a574;
+            display: none;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px dotted #e6d2b5;
+        }
+        
+        .dish-name {
+            font-size: 2rem;
+            color: #8b4513;
+            font-weight: bold;
+        }
+        
+        .emoji {
+            font-size: 2.5rem;
+        }
+        
+        .luck-signature {
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.3rem;
+            font-style: italic;
+            border: 1px solid #ffd54f;
+            color: #5d4037;
+        }
+        
+        .reason-box {
+            background: #f8f4e9;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+        
+        .reason-box h3 {
+            color: #8b4513;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .reason-box h3 i {
+            margin-right: 10px;
+            color: #d4a574;
+        }
+        
+        .highlight {
+            color: #8b4513;
+            font-weight: bold;
+        }
+        
+        .history-container {
+            margin-top: 30px;
+            background: #f9f3e9;
+            padding: 20px;
+            border-radius: 15px;
+        }
+        
+        .history-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #8b4513;
+            display: flex;
+            align-items: center;
+        }
+        
+        .history-title i {
+            margin-right: 10px;
+        }
+        
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .history-item {
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            border: 1px solid #e6d2b5;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #8b6d46;
+            font-size: 0.9rem;
+            border-top: 1px solid #e6d2b5;
+            background: #f9f3e9;
+        }
+        
+        .sound-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #ffebcd;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .special-note {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #4caf50;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .dish-name {
+                font-size: 1.6rem;
+            }
+            
+            .bamboo-tube {
+                width: 100px;
+                height: 160px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="sound-icon" id="soundToggle">
+                <i class="fas fa-volume-up"></i>
+            </div>
+            <h1>明天吃什么 · 美食探险签筒</h1>
+            <p>食运轮转，一签定美味</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="bamboo-container">
+                <p style="margin-bottom: 20px; font-size: 1.1rem;">点击签筒或下方按钮，抽取明日美食命运</p>
+                
+                <div class="bamboo-tube" id="bambooTube">
+                    <!-- 签筒图案 -->
+                </div>
+                
+                <button class="draw-button" id="drawButton">
+                    <i class="fas fa-random"></i> 抽取今日食运签
+                </button>
+                
+                <p style="margin-top: 20px; color: #8b6d46; font-size: 0.9rem;">
+                    <i class="fas fa-lightbulb"></i> 小贴士：晚上8-9点抽取最佳，预留采购时间
+                </p>
+            </div>
+            
+            <div class="result-container" id="resultContainer">
+                <div class="result-header">
+                    <div>
+                        <div class="dish-name" id="dishName">菜品名称</div>
+                        <div style="color: #8b6d46; margin-top: 5px;" id="dishType">家常下饭菜 · 中餐</div>
+                    </div>
+                    <div class="emoji" id="dishEmoji">🍜</div>
+                </div>
+                
+                <div class="luck-signature" id="luckSignature">
+                    "食运签名将显示在这里"
+                </div>
+                
+                <div class="reason-box">
+                    <h3><i class="fas fa-utensils"></i> 推荐理由</h3>
+                    <p id="recommendationReason">推荐理由内容将在这里显示...</p>
+                    
+                    <div class="special-note" id="specialNote">
+                        <strong><i class="fas fa-gift"></i> 食运爆发！</strong> 今日额外获得隐藏推荐：<span id="extraDish">冬瓜排骨汤</span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="draw-button" id="shareButton" style="padding: 10px 25px; font-size: 1rem; margin-right: 10px;">
+                        <i class="fas fa-share-alt"></i> 分享食运
+                    </button>
+                    <button class="draw-button" id="saveButton" style="padding: 10px 25px; font-size: 1rem; background: linear-gradient(to bottom, #a5d6a7, #81c784);">
+                        <i class="fas fa-bookmark"></i> 收藏菜单
+                    </button>
+                </div>
+            </div>
+            
+            <div class="history-container">
+                <div class="history-title">
+                    <i class="fas fa-history"></i> 近期食运记录
+                </div>
+                <div class="history-list" id="historyList">
+                    <!-- 历史记录将通过JS动态添加 -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>美食有灵，知你冷暖 · 明日餐桌，定不负期待</p>
+            <p style="margin-top: 5px; font-size: 0.8rem;">刷新页面可重新开始 · 菜品库每日更新</p>
+        </div>
+    </div>
+
+    <script>
+        // 菜品数据库
+        const dishes = [
+            {
+                name: "秘制三杯鸡 × 黄金锅巴饭",
+                emoji: "🍗🌿🍚",
+                type: "台式经典 · 下饭神器",
+                signature: "金玉满堂，福气粘唇",
+                reason: "这道菜藏着三重惊喜：1) 罗勒与麻油碰撞出的香气，开门瞬间俘获全家嗅觉；2) 嫩滑鸡腿肉×焦脆锅巴，一场牙齿的欢愉冒险；3) 酱汁渗入米饭，最后一勺往往是明日最惦念的滋味。"
+            },
+            {
+                name: "红烧肉炖土豆",
+                emoji: "🥩🥔🔥",
+                type: "家常硬菜 · 温暖饱足",
+                signature: "红火炖煮，家业稳固",
+                reason: "肥瘦相间的五花肉与土豆在慢炖中交融，油脂化为醇厚汤汁，土豆吸饱肉香，软糯入味。这是一道能唤起童年记忆的安心料理，配米饭堪称绝配。"
+            },
+            {
+                name: "鱼香茄子煲",
+                emoji: "🍆🐟🌶️",
+                type: "川味下饭菜 · 素中带荤",
+                signature: "鱼香满室，余庆有余",
+                reason: "虽无鱼却有鱼香，茄子软烂入味，肉末增香，微辣带甜的复合口味让人欲罢不能。用砂锅煲制更能锁住香气，保温持久。"
+            },
+            {
+                name: "番茄炒蛋 × 白灼菜心",
+                emoji: "🍅🥚🥬",
+                type: "经典搭配 · 营养均衡",
+                signature: "红黄青白，四时有福",
+                reason: "国民级家常组合：番茄炒蛋酸甜开胃，简单却考验火候；白灼菜心清爽解腻，保留蔬菜原味。15分钟即可完成的快手美味。"
+            },
+            {
+                name: "麻婆豆腐",
+                emoji: "🧈🌶️🔥",
+                type: "川味经典 · 麻辣鲜香",
+                signature: "麻辣当先，福气滚滚",
+                reason: "豆腐嫩滑，肉末酥香，麻辣红油包裹每一寸食材。正宗的麻婆豆腐讲究'麻、辣、烫、香、酥、嫩、鲜、活'八字诀，是下饭的终极武器。"
+            },
+            {
+                name: "糖醋排骨",
+                emoji: "🍖🍯🍶",
+                type: "江浙名菜 · 酸甜可口",
+                signature: "甜酸如意，节节高升",
+                reason: "金黄酥香的排骨裹着亮晶晶的糖醋汁，酸甜平衡恰到好处。冷热皆宜，即使第二天带饭也风味依旧，是便当盒里的明星菜品。"
+            },
+            {
+                name: "地三鲜",
+                emoji: "🥔🍆🫑",
+                type: "东北家常 · 素菜荤做",
+                signature: "三鲜聚宝，接地连福",
+                reason: "土豆、茄子、青椒的朴素组合，经过油炸和烧制，产生奇妙的化学反应。虽然是一道素菜，却有着不输肉菜的浓郁香气和饱满口感。"
+            },
+            {
+                name: "回锅肉",
+                emoji: "🥩🧅🌶️",
+                type: "川菜代表 · 咸香微辣",
+                signature: "回锅再烹，福气双至",
+                reason: "煮后再炒的猪五花肉片微微卷曲，肥而不腻，搭配蒜苗和郫县豆瓣酱，产生独特的'灯盏窝'形态和诱人色泽，是米饭的绝佳伴侣。"
+            }
+        ];
+        
+        // 额外隐藏菜品（10%概率触发）
+        const extraDishes = [
+            "玉米胡萝卜排骨汤",
+            "紫菜蛋花汤",
+            "酸辣土豆丝",
+            "蒜蓉空心菜",
+            "凉拌黄瓜",
+            "冬瓜虾皮汤"
+        ];
+        
+        // 音效控制
+        let soundEnabled = true;
+        const soundToggle = document.getElementById('soundToggle');
+        const bambooTube = document.getElementById('bambooTube');
+        const drawButton = document.getElementById('drawButton');
+        const resultContainer = document.getElementById('resultContainer');
+        const dishName = document.getElementById('dishName');
+        const dishEmoji = document.getElementById('dishEmoji');
+        const dishType = document.getElementById('dishType');
+        const luckSignature = document.getElementById('luckSignature');
+        const recommendationReason = document.getElementById('recommendationReason');
+        const specialNote = document.getElementById('specialNote');
+        const extraDish = document.getElementById('extraDish');
+        const historyList = document.getElementById('historyList');
+        const shareButton = document.getElementById('shareButton');
+        const saveButton = document.getElementById('saveButton');
+        
+        let history = [];
+        
+        // 模拟音效函数
+        function playSoundEffect(type) {
+            if (!soundEnabled) return;
+            
+            switch(type) {
+                case 'draw':
+                    // 风铃声模拟
+                    console.log("🎵 播放风铃音效");
+                    break;
+                case 'success':
+                    // 成功音效
+                    console.log("🎵 播放成功音效");
+                    break;
+            }
+        }
+        
+        // 切换音效
+        soundToggle.addEventListener('click', function() {
+            soundEnabled = !soundEnabled;
+            const icon = this.querySelector('i');
+            if (soundEnabled) {
+                icon.className = 'fas fa-volume-up';
+                this.style.color = '#ffebcd';
+            } else {
+                icon.className = 'fas fa-volume-mute';
+                this.style.color = '#ccc';
+            }
+        });
+        
+        // 抽取菜品
+        function drawDish() {
+            // 播放音效
+            playSoundEffect('draw');
+            
+            // 签筒摇动效果
+            bambooTube.classList.add('shaking');
+            drawButton.disabled = true;
+            drawButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 抽取中...';
+            
+            // 隐藏结果容器
+            resultContainer.style.display = 'none';
+            
+            // 3秒后显示结果
+            setTimeout(() => {
+                bambooTube.classList.remove('shaking');
+                
+                // 随机选择菜品
+                const randomIndex = Math.floor(Math.random() * dishes.length);
+                const selectedDish = dishes[randomIndex];
+                
+                // 10%概率触发隐藏菜品
+                const showExtra = Math.random() < 0.1;
+                
+                // 更新DOM
+                dishName.textContent = selectedDish.name;
+                dishEmoji.textContent = selectedDish.emoji;
+                dishType.textContent = selectedDish.type;
+                luckSignature.textContent = `"${selectedDish.signature}"`;
+                recommendationReason.textContent = selectedDish.reason;
+                
+                if (showExtra) {
+                    const randomExtraIndex = Math.floor(Math.random() * extraDishes.length);
+                    extraDish.textContent = extraDishes[randomExtraIndex];
+                    specialNote.style.display = 'block';
+                } else {
+                    specialNote.style.display = 'none';
+                }
+                
+                // 显示结果容器
+                resultContainer.style.display = 'block';
+                
+                // 添加到历史记录
+                addToHistory(selectedDish.name, selectedDish.emoji);
+                
+                // 恢复按钮状态
+                drawButton.disabled = false;
+                drawButton.innerHTML = '<i class="fas fa-random"></i> 抽取今日食运签';
+                
+                // 播放成功音效
+                playSoundEffect('success');
+                
+                // 滚动到结果位置
+                resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 1500);
+        }
+        
+        // 添加到历史记录
+        function addToHistory(name, emoji) {
+            const historyItem = {
+                name: name,
+                emoji: emoji,
+                time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+            };
+            
+            history.unshift(historyItem);
+            
+            // 只保留最近5条记录
+            if (history.length > 5) {
+                history.pop();
+            }
+            
+            // 更新历史记录显示
+            updateHistoryDisplay();
+        }
+        
+        // 更新历史记录显示
+        function updateHistoryDisplay() {
+            historyList.innerHTML = '';
+            
+            history.forEach(item => {
+                const historyElement = document.createElement('div');
+                historyElement.className = 'history-item';
+                historyElement.innerHTML = `${item.emoji} ${item.name} <span style="color: #8b6d46; font-size: 0.8rem; margin-left: 5px;">${item.time}</span>`;
+                historyList.appendChild(historyElement);
+            });
+        }
+        
+        // 分享功能
+        shareButton.addEventListener('click', function() {
+            const currentDish = dishName.textContent;
+            const currentEmoji = dishEmoji.textContent;
+            const currentSignature = luckSignature.textContent;
+            
+            const shareText = `我的明日食运签：${currentEmoji} ${currentDish}\n${currentSignature}\n\n来自「明天吃什么」美食探险签筒`;
+            
+            // 复制到剪贴板
+            navigator.clipboard.writeText(shareText).then(() => {
+                const originalHTML = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check"></i> 已复制到剪贴板';
+                this.style.background = 'linear-gradient(to bottom, #a5d6a7, #81c784)';
+                
+                setTimeout(() => {
+                    this.innerHTML = originalHTML;
+                    this.style.background = 'linear-gradient(to bottom, #d4a574, #b08d5a)';
+                }, 2000);
+            });
+        });
+        
+        // 收藏功能
+        saveButton.addEventListener('click', function() {
+            const currentDish = dishName.textContent;
+            
+            const originalHTML = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-check"></i> 已收藏';
+            this.style.background = 'linear-gradient(to bottom, #a5d6a7, #81c784)';
+            
+            setTimeout(() => {
+                this.innerHTML = originalHTML;
+                this.style.background = 'linear-gradient(to bottom, #a5d6a7, #81c784)';
+            }, 2000);
+            
+            // 在实际应用中，这里应该将菜品保存到本地存储或发送到服务器
+            console.log(`收藏菜品: ${currentDish}`);
+        });
+        
+        // 事件监听
+        bambooTube.addEventListener('click', drawDish);
+        drawButton.addEventListener('click', drawDish);
+        
+        // 初始化：显示一条示例历史记录
+        addToHistory("点击上方签筒开始抽取", "🎋");
+        
+        // 初始抽取一次（可选，取消注释则页面加载时自动抽一次）
+        // setTimeout(drawDish, 500);
+    </script>
+</body>
+</html>
